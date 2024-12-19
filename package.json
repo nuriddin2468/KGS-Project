@@ -1,0 +1,35 @@
+{
+  "name": "ksg",
+  "version": "1.0.0",
+  "main": "app.ts",
+  "scripts": {
+    "dev": "tsx watch --env-file=.env ./src/app.ts",
+    "setup": "tsx --env-file=.env ./src/setup.ts",
+    "format": "prettier --write .",
+    "lint": "eslint . ",
+    "lint:fix": "eslint . --fix "
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@types/bull": "^3.15.9",
+    "@types/node": "^22.10.2",
+    "@types/pg": "^8.11.10",
+    "eslint": "^9.17.0",
+    "globals": "^15.14.0",
+    "prettier": "^3.4.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.1"
+  },
+  "dependencies": {
+    "@sinclair/typebox": "^0.34.12",
+    "bull": "^4.16.5",
+    "fastify": "^5.2.0",
+    "ioredis": "^5.4.1",
+    "pg": "^8.13.1"
+  }
+}

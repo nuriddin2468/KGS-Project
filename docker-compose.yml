@@ -1,0 +1,73 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fasti-app
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+    volumes:
+      - fasti-app:/usr/src/app
+      - fasti-node-modules:/usr/src/app/node_modules
+    command: npm run dev
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - app-network
+
+  db:
+    image: postgres:16-alpine
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGUSER: "postgres"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+  
+  redis:
+    image: redis:7-alpine
+    container_name: redis-cache
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - app-network
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  redis-data:
+  postgres-data:
+  fasti-app:
+    driver: local
+    driver_opts:
+      type: none
+      device: .
+      o: bind
+  fasti-node-modules:
+
+networks:
+  app-network:
+    driver: bridge
